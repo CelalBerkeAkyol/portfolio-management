@@ -1,0 +1,33 @@
+[
+  {
+    "isim": "isminizi_doldurunuz",
+    "ana_para": 80.0,
+    "para_dagilimi": {
+      "TL Based Interest": 10.0,
+      "USD Based Interest": 10.0,
+      "Gold": 10.0,
+      "Silver": 10.0,
+      "Turkish Companies": 20.0,
+      "Foreign Companies": 10.0,
+      "Crypto Money": 10.0
+    },
+    "guncel_portfoy_dagilimi": {
+      "TL Based Interest": 0.125,
+      "USD Based Interest": 0.125,
+      "Gold": 0.125,
+      "Silver": 0.125,
+      "Turkish Companies": 0.25,
+      "Foreign Companies": 0.125,
+      "Crypto Money": 0.125
+    },
+    "hedef_portfoy": {
+      "TL Based Interest": 0.2,
+      "USD Based Interest": 0,
+      "Gold": 0,
+      "Silver": 0.1,
+      "Turkish Companies": 0.3,
+      "Foreign Companies": 0.3,
+      "Crypto Money": 0.1
+    }
+  }
+]

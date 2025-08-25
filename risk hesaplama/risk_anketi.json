@@ -1,0 +1,214 @@
+{
+  "risk_questions": [
+    {
+      "question_id": 1,
+      "question_text": "Bir yatırımınızın değeri bir ay içinde %10 düştüğünde ne hissedersiniz?",
+      "options": [
+        {
+          "option_id": "A",
+          "option_text": "Panik yapar, endişelenir ve hemen satmayı düşünürüm.",
+          "score": 2
+        },
+        {
+          "option_id": "B",
+          "option_text": "Endişelenirim ama durumun geçici olabileceğini düşünerek beklemeye karar veririm.",
+          "score": 6
+        },
+        {
+          "option_id": "C",
+          "option_text": "Bu durumu normal karşılar, hatta daha fazla alım fırsatı olarak görürüm.",
+          "score": 10
+        }
+      ]
+    },
+    {
+      "question_id": 2,
+      "question_text": "Yatırım yapmayı düşündüğünüz para, genel bütçenizin ne kadarını oluşturuyor?",
+      "options": [
+        {
+          "option_id": "A",
+          "option_text": "Kaybetmeyi göze alamayacağım, günlük yaşam giderlerim için ayırdığım paranın büyük bir kısmı.",
+          "score": 1
+        },
+        {
+          "option_id": "B",
+          "option_text": "Bir miktarını kaybetmem beni üzse de, yaşamımı etkilemeyecek bir kısmı.",
+          "score": 5
+        },
+        {
+          "option_id": "C",
+          "option_text": "Uzun vadeli birikimim, kaybetsem dahi finansal durumumu ciddi şekilde etkilemeyecek bir para.",
+          "score": 10
+        }
+      ]
+    },
+    {
+      "question_id": 3,
+      "question_text": "Bir yatırımın yüksek getiri potansiyeli ile yüksek risk taşıması durumunda ne yaparsınız?",
+      "options": [
+        {
+          "option_id": "A",
+          "option_text": "Riskli yatırımlardan tamamen kaçınır, güvenli ve istikrarlı seçenekleri tercih ederim.",
+          "score": 2
+        },
+        {
+          "option_id": "B",
+          "option_text": "Portföyümün küçük bir kısmını riskli yatırımlara ayırabilirim, ancak ana paramı korurum.",
+          "score": 6
+        },
+        {
+          "option_id": "C",
+          "option_text": "Yüksek getiri peşinde koşan biriyim ve bu tür riskleri almaktan çekinmem.",
+          "score": 9
+        }
+      ]
+    },
+    {
+      "question_id": 4,
+      "question_text": "Yatırımlarınızı ne kadar süreyle elde tutmayı planlıyorsunuz?",
+      "options": [
+        {
+          "option_id": "A",
+          "option_text": "1 yıldan kısa.",
+          "score": 2
+        },
+        {
+          "option_id": "B",
+          "option_text": "1-5 yıl arası.",
+          "score": 6
+        },
+        {
+          "option_id": "C",
+          "option_text": "5 yıldan uzun.",
+          "score": 10
+        }
+      ]
+    },
+    {
+      "question_id": 5,
+      "question_text": "Finansal piyasalar ve yatırım araçları hakkında ne kadar bilgi sahibisiniz?",
+      "options": [
+        {
+          "option_id": "A",
+          "option_text": "Çok az veya hiç bilgim yok. Temel terimlere bile yabancıyım.",
+          "score": 3
+        },
+        {
+          "option_id": "B",
+          "option_text": "Temel bilgim var, piyasaları ara sıra takip ederim.",
+          "score": 6
+        },
+        {
+          "option_id": "C",
+          "option_text": "Konuya hakimim, düzenli olarak araştırma yapar ve gelişmeleri yakından izlerim.",
+          "score": 10
+        }
+      ]
+    },
+    {
+      "question_id": 6,
+      "question_text": "10.000 TL yatırımınızın bir ay içinde 8.000 TL'ye düştüğünü görseniz ne yaparsınız?",
+      "options": [
+        {
+          "option_id": "A",
+          "option_text": "Hemen satar, zararı durdururum.",
+          "score": 1
+        },
+        {
+          "option_id": "B",
+          "option_text": "Bekler, piyasanın toparlanmasını umarım.",
+          "score": 5
+        },
+        {
+          "option_id": "C",
+          "option_text": "Temel değerleri değişmediyse, ek alım yaparak ortalamamı düşürürüm.",
+          "score": 10
+        }
+      ]
+    },
+    {
+      "question_id": 7,
+      "question_text": "Acil durumlar için birikiminizin ne kadarı kolayca erişilebilir durumda?",
+      "options": [
+        {
+          "option_id": "A",
+          "option_text": "Çok az veya hiç yok. Paramın tamamı uzun vadeli yatırımlarda.",
+          "score": 2
+        },
+        {
+          "option_id": "B",
+          "option_text": "3-6 aylık giderlerimi karşılayacak kadar.",
+          "score": 6
+        },
+        {
+          "option_id": "C",
+          "option_text": "6 aydan daha fazla giderimi karşılayacak kadar.",
+          "score": 10
+        }
+      ]
+    },
+    {
+      "question_id": 8,
+      "question_text": "Aşağıdaki yatırım araçlarından hangisi size en cazip geliyor?",
+      "options": [
+        {
+          "option_id": "A",
+          "option_text": "Vadeli mevduat, devlet tahvilleri.",
+          "score": 1
+        },
+        {
+          "option_id": "B",
+          "option_text": "Mavi çipli hisse senetleri (köklü şirketler), dengeli yatırım fonları.",
+          "score": 6
+        },
+        {
+          "option_id": "C",
+          "option_text": "Kripto paralar, girişim sermayesi fonları, spekülatif hisse senetleri.",
+          "score": 10
+        }
+      ]
+    },
+    {
+      "question_id": 9,
+      "question_text": "Piyasa haberlerindeki olumsuzluklar ve dalgalanmalar sizi nasıl etkiler?",
+      "options": [
+        {
+          "option_id": "A",
+          "option_text": "Çok endişelenir ve yatırım kararlarımı gözden geçiririm.",
+          "score": 2
+        },
+        {
+          "option_id": "B",
+          "option_text": "Kısa süreliğine endişelenirim ama mantıklı kalmaya çalışırım.",
+          "score": 5
+        },
+        {
+          "option_id": "C",
+          "option_text": "Piyasa döngülerinin doğal bir parçası olarak görür, sakin kalırım.",
+          "score": 9
+        }
+      ]
+    },
+    {
+      "question_id": 10,
+      "question_text": "Yatırım yaparken ana motivasyonunuz nedir?",
+      "options": [
+        {
+          "option_id": "A",
+          "option_text": "Paramı enflasyona karşı korumak ve güvenli bir şekilde büyütmek.",
+          "score": 3
+        },
+        {
+          "option_id": "B",
+          "option_text": "Dengeli bir büyüme ve iyi bir getiri elde etmek.",
+          "score": 7
+        },
+        {
+          "option_id": "C",
+          "option_text": "Yüksek getiri potansiyelinden yararlanmak ve hızlı zengin olmak.",
+          "score": 10
+        }
+      ]
+    }
+  ]
+}
