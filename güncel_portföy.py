@@ -190,14 +190,4 @@ if __name__ == "__main__":
             varlik_bilgileri
         )
         
-        hedef_portfoy_dagilimi = secilen_kisi_objesi.get('hedef_portfoy', {})
-        if hedef_portfoy_dagilimi:
-            hedef_para_dagilimi = {varlik: yuzde * yeni_ana_para for varlik, yuzde in hedef_portfoy_dagilimi.items()}
-            portfoy_raporu_goster(
-                kisi_ismi,
-                "Hedef Portföy",
-                hedef_para_dagilimi,
-                hedef_portfoy_dagilimi,
-                yeni_ana_para,
-                varlik_bilgileri
-            )
+        
