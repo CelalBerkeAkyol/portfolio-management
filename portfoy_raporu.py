@@ -60,19 +60,31 @@ def portfoy_riskini_hesapla(portfoy_dagilimi, varlik_bilgileri):
             
     return toplam_risk_puani
 
-def portfoy_getirisini_hesapla(portfoy_dagilimi, varlik_bilgileri):
+def portfoy_getirisini_hesapla(portfoy_dagilimi, varlik_bilgileri, senaryo='baz'):
     """
-    Portföydeki varlıkların getiri beklentilerine ve kur artışına göre toplam getiri beklentisini hesaplar.
+    Portföydeki varlıkların getiri beklentilerini belirtilen senaryoya göre hesaplar.
+    Senaryo: 'kötü', 'baz', 'iyi' olabilir.
     """
+    senaryo_getiri_anahtarlari = {
+        "baz": "beklenen_getiri_yuzde",
+        "iyi": "iyi_senaryo_beklenen_getiri",
+        "kötü": "kötü_senaryo_beklenen_getiri"
+    }
+    
+    getiri_anahtari = senaryo_getiri_anahtarlari.get(senaryo, "beklenen_getiri_yuzde")
+    
     toplam_getiri_yuzdesi = 0
-    usd_kur_beklentisi = varlik_bilgileri.get("USD", {}).get('beklenen_getiri_yuzde', 0)
+    # Dolar kur beklentisini de senaryoya göre alıyoruz
+    usd_kur_beklentisi = varlik_bilgileri.get("USD", {}).get(getiri_anahtari, 0)
     
     for varlik, yuzde in portfoy_dagilimi.items():
         if varlik in varlik_bilgileri:
-            varlik_getirisi = varlik_bilgileri[varlik]['beklenen_getiri_yuzde']
+            # Varlığın kendi getirisini senaryoya göre alıyoruz
+            varlik_getirisi = varlik_bilgileri[varlik].get(getiri_anahtari, 0)
             dolar_bazli = varlik_bilgileri[varlik]['dolar_bazli']
             
             if dolar_bazli:
+                # Dolar bazlı varlıklar için hem kendi getirisi hem de kur getirisi hesaba katılır
                 birlesik_getiri = (1 + varlik_getirisi) * (1 + usd_kur_beklentisi) - 1
                 toplam_getiri_yuzdesi += yuzde * birlesik_getiri
             else:
@@ -82,9 +94,28 @@ def portfoy_getirisini_hesapla(portfoy_dagilimi, varlik_bilgileri):
             
     return toplam_getiri_yuzdesi
 
+def senaryo_analizi_yap_ve_goster(yuzde_dagilimi, varlik_bilgileri, ana_para):
+    """
+    Tüm senaryolar için portföy getirilerini hesaplar ve sonuçları yazdırır.
+    """
+    print("-" * 50)
+    print("--- SENARYO ANALİZİ (Yıllık TL Bazlı) ---")
+
+    senaryolar = {
+        "Kötü Senaryo": "kötü",
+        "Baz Senaryo"  : "baz",
+        "İyi Senaryo"  : "iyi"
+    }
+
+    for senaryo_adi, senaryo_kodu in senaryolar.items():
+        getiri = portfoy_getirisini_hesapla(yuzde_dagilimi, varlik_bilgileri, senaryo=senaryo_kodu)
+        son_para = ana_para * (1 + getiri)
+        print(f"{senaryo_adi:<15}: Getiri: %{getiri * 100:6.2f} | Portföy Değeri: {son_para:15,.2f} TL")
+
+
 def portfoy_raporu_goster(isim, baslik, para_dagilimi, yuzde_dagilimi, ana_para, varlik_bilgileri):
     """
-    Verilen bilgilere göre yatırım dağılımını, riskini ve getirisini hesaplar ve ekrana yazdırır.
+    Verilen bilgilere göre yatırım dağılımını, riskini ve TÜM SENARYOLARA GÖRE getirisini hesaplar ve ekrana yazdırır.
     """
     print("\n" + "="*50)
     print(f"Kişi: {isim}")
@@ -101,38 +132,33 @@ def portfoy_raporu_goster(isim, baslik, para_dagilimi, yuzde_dagilimi, ana_para,
         print(f"{' ':<20} Risk: {risk_puani:<2} / 10 | Getiri: {beklenen_getiri}")
 
     toplam_portfoy_riski = portfoy_riskini_hesapla(yuzde_dagilimi, varlik_bilgileri)
-    toplam_portfoy_getirisi = portfoy_getirisini_hesapla(yuzde_dagilimi, varlik_bilgileri)
     
     print("-" * 50)
     print(f"Portföyün Ağırlıklı Ortalama Riski: {toplam_portfoy_riski:.2f} / 10")
-    print(f"Portföyün Yıllık (TL Bazlı) Getiri Beklentisi: %{toplam_portfoy_getirisi * 100:.2f}")
+    
+    # Her senaryo için getiri beklentisini hesaplayıp yazdırıyoruz
+    senaryo_analizi_yap_ve_goster(yuzde_dagilimi, varlik_bilgileri, ana_para)
+    
     print("="*50)
+
 
 def portfoy_farkini_hesapla_ve_goster(guncel_dagilim, hedef_dagilim, ana_para):
     """
     Güncel portföyü hedef portföye dönüştürmek için gereken değişimleri hesaplar ve raporlar.
-    Her bir varlık için yapılması gereken alım (+) veya satım (-) miktarını gösterir.
     """
     print("\n" + "="*50)
     print("Portföy Değişim Raporu (Güncelden Hedefe)")
     print("-" * 50)
 
-    # Hem güncel hem de hedef portföyde bulunan tüm varlıkları bir araya getir
-    tum_varliklar = set(guncel_dagilim.keys()) | set(hedef_dagilim.keys())
-    
-    # Raporun daha düzenli görünmesi için varlıkları alfabetik sırala
-    sirali_varliklar = sorted(list(tum_varliklar))
+    tum_varliklar = sorted(list(set(guncel_dagilim.keys()) | set(hedef_dagilim.keys())))
 
-    for varlik in sirali_varliklar:
+    for varlik in tum_varliklar:
         guncel_yuzde = guncel_dagilim.get(varlik, 0)
         hedef_yuzde = hedef_dagilim.get(varlik, 0)
-
-        # Yüzde ve parasal farkı hesapla
         yuzde_farki = hedef_yuzde - guncel_yuzde
         para_farki = yuzde_farki * ana_para
 
-        # Sadece değişim gereken varlıkları göster
-        if para_farki != 0:
+        if abs(para_farki) > 0.01: # Çok küçük farkları göstermemek için
             print(f"{varlik:<20}: {para_farki:,.2f} TL ({yuzde_farki*100:+.1f}%)")
 
     print("="*50)
@@ -153,10 +179,9 @@ if __name__ == "__main__":
         kisi_ana_para = secilen_kisi_objesi['ana_para']
         
         # 1. Güncel Portföy raporunu oluştur
-        guncel_para_dagilimi = secilen_kisi_objesi.get('para_dagilimi')
         guncel_yuzde_dagilimi = secilen_kisi_objesi.get('guncel_portfoy_dagilimi')
-
-        if guncel_para_dagilimi and guncel_yuzde_dagilimi:
+        if guncel_yuzde_dagilimi:
+            guncel_para_dagilimi = {varlik: yuzde * kisi_ana_para for varlik, yuzde in guncel_yuzde_dagilimi.items()}
             portfoy_raporu_goster(
                 kisi_ismi,
                 "Güncel Portföy",
