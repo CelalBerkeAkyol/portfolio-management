@@ -2,7 +2,9 @@
   "USD": {
     "risk_puani": 1,
     "beklenen_getiri": "Enflasyon altı",
-    "beklenen_getiri_yuzde": 0.1,
+    "beklenen_getiri_yuzde": 0.9,
+    "kötü_senaryo_beklenen_getiri": -0.03,
+    "iyi_senaryo_beklenen_getiri": 0.16,
     "dolar_bazli": false,
     "aciklama": "TL bazlı dolar"
   },
@@ -10,13 +12,17 @@
     "risk_puani": 2,
     "beklenen_getiri": "Enflasyon civarı",
     "beklenen_getiri_yuzde": 0.16,
+    "kötü_senaryo_beklenen_getiri": 0.14,
+    "iyi_senaryo_beklenen_getiri": 0.19,
     "dolar_bazli": false,
     "aciklama": "TL bazlı faiz geliri ve para piyasası fonları"
   },
   "USD Based Interest": {
     "risk_puani": 1,
     "beklenen_getiri": "Dolar enflasyonu üstü",
-    "beklenen_getiri_yuzde": 0.01,
+    "beklenen_getiri_yuzde": 0.035,
+    "kötü_senaryo_beklenen_getiri": 0.02,
+    "iyi_senaryo_beklenen_getiri": 0.055,
     "dolar_bazli": true,
     "aciklama": "Dolar bazlı faiz geliri ve yabancı para piyasası fonları"
   },
@@ -24,20 +30,26 @@
     "risk_puani": 4,
     "beklenen_getiri": "Orta",
     "beklenen_getiri_yuzde": 0.13,
+    "kötü_senaryo_beklenen_getiri": -0.02,
+    "iyi_senaryo_beklenen_getiri": 0.28,
     "dolar_bazli": true,
     "aciklama": "Altın, genellikle değer koruma amaçlı bir varlıktır."
   },
   "Silver": {
     "risk_puani": 5,
     "beklenen_getiri": "Orta",
-    "beklenen_getiri_yuzde": 0.2,
+    "beklenen_getiri_yuzde": 0.18,
+    "kötü_senaryo_beklenen_getiri": -0.1,
+    "iyi_senaryo_beklenen_getiri": 0.27,
     "dolar_bazli": true,
     "aciklama": "Gümüş, altından daha oynak olabilir."
   },
   "Foreign Companies": {
     "risk_puani": 7,
     "beklenen_getiri": "Yüksek",
-    "beklenen_getiri_yuzde": 0.1,
+    "beklenen_getiri_yuzde": 0.07,
+    "kötü_senaryo_beklenen_getiri": -0.2,
+    "iyi_senaryo_beklenen_getiri": 0.15,
     "dolar_bazli": true,
     "aciklama": "Yabancı borsalarda işlem gören hisse senetleri"
   },
@@ -45,6 +57,8 @@
     "risk_puani": 9,
     "beklenen_getiri": "Yüksek",
     "beklenen_getiri_yuzde": 0.3,
+    "kötü_senaryo_beklenen_getiri": -0.35,
+    "iyi_senaryo_beklenen_getiri": 0.5,
     "dolar_bazli": false,
     "aciklama": "Borsa İstanbul'da işlem gören hisse senetleri"
   },
@@ -52,6 +66,8 @@
     "risk_puani": 10,
     "beklenen_getiri": "Çok Yüksek",
     "beklenen_getiri_yuzde": 0.4,
+    "kötü_senaryo_beklenen_getiri": -0.5,
+    "iyi_senaryo_beklenen_getiri": 0.75,
     "dolar_bazli": true,
     "aciklama": "Bitcoin, Ethereum gibi dijital varlıklar"
   }
