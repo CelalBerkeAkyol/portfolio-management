@@ -86,12 +86,12 @@ def guncel_portfoy_bilgilerini_al():
     turk_hisse = sayi_al("Türk Hisse Senedi miktarınız: ")
     turk_fon = sayi_al("Türk Hisse Senedi Fonu miktarınız: ")
     guncel_portfoy_miktar["Turkish Companies"] = turk_hisse + turk_fon
-    
+    guncel_portfoy_miktar["Real Estate"] = sayi_al("Gayrimenkul / Gayrimenkul Senet ve fon miktarınız: ")
     guncel_portfoy_miktar["Foreign Companies"] = sayi_al("Yabancı Hisse Senedi / Fon miktarınız: ")
     guncel_portfoy_miktar["Crypto Money"] = sayi_al("Kripto Para miktarınız: ")
 
     return guncel_portfoy_miktar
-# DEĞİŞİKLİK BURADA BİTTİ
+
 
 def portfoy_riskini_hesapla(portfoy_dagilimi, varlik_bilgileri):
     """
