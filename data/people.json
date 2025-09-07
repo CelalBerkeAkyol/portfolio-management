@@ -1,0 +1,86 @@
+[
+  {
+        "name": "Example 1",
+        "risk_score": 7.4,
+        "principal": 215960.0,
+        "base_portfolio_distribution": {
+            "TRY Based Interest": 0.05,
+            "Gold": 0.05,
+            "BTC": 0.03,
+            "Turkish Value Stocks": 0.06,
+            "Foreign Stocks": 0.06
+        },
+        "target_portfolio": {
+            "TRY Based Interest": 0.25,
+            "USD Based Interest": 0.0,
+            "Gold": 0.07,
+            "Silver": 0.03,
+            "Real Estate": 0.0,
+            "Turkish Fund": 0.16,
+            "Turkish Speck Stocks": 0.1,
+            "Turkish Grow Stocks": 0.1,
+            "Turkish Value Stocks": 0.06,
+            "Foreign Stocks": 0.1,
+            "BTC": 0.03,
+            "Cryptocurrency": 0.1
+        },
+        "current_values": {
+            "TRY Based Interest": 70000.0,
+            "USD Based Interest": 0.0,
+            "Gold": 16000.0,
+            "Silver": 9000.0,
+            "Real Estate": 0.0,
+            "Turkish Fund": 45000.0,
+            "Turkish Spec Stocks": 3600.0,
+            "Turkish Grow Stocks": 3700.0,
+            "Turkish Value Stocks": 11000.0,
+            "Foreign Stocks": 33500.0,
+            "BTC": 2660.0,
+            "Cryptocurrency": 21500.0
+        },
+        "current_portfolio": {
+            "TRY Based Interest": 0.324134098907205,
+            "USD Based Interest": 0.0,
+            "Gold": 0.07408779403593257,
+            "Silver": 0.04167438414521207,
+            "Real Estate": 0.0,
+            "Turkish Fund": 0.2083719207260604,
+            "Turkish Spec Stocks": 0.016669753658084832,
+            "Turkish Grow Stocks": 0.01713280237080941,
+            "Turkish Value Stocks": 0.05093535839970365,
+            "Foreign Stocks": 0.15512131876273383,
+            "BTC": 0.01231709575847379,
+            "Cryptocurrency": 0.09955547323578441
+        },
+        "amount_distribution": {
+            "TRY Based Interest": 70000.0,
+            "USD Based Interest": 0.0,
+            "Gold": 16000.0,
+            "Silver": 9000.0,
+            "Real Estate": 0.0,
+            "Turkish Fund": 45000.0,
+            "Turkish Spec Stocks": 3600.0,
+            "Turkish Grow Stocks": 3700.0,
+            "Turkish Value Stocks": 11000.0,
+            "Foreign Stocks": 33500.0,
+            "BTC": 2660.0,
+            "Cryptocurrency": 21500.0
+        },
+        "current_portfolio_distribution": {
+            "TRY Based Interest": 0.324134098907205,
+            "USD Based Interest": 0.0,
+            "Gold": 0.07408779403593257,
+            "Silver": 0.04167438414521207,
+            "Real Estate": 0.0,
+            "Turkish Fund": 0.2083719207260604,
+            "Turkish Spec Stocks": 0.016669753658084832,
+            "Turkish Grow Stocks": 0.01713280237080941,
+            "Turkish Value Stocks": 0.05093535839970365,
+            "Foreign Stocks": 0.15512131876273383,
+            "BTC": 0.01231709575847379,
+            "Cryptocurrency": 0.09955547323578441
+        }
+    }
+  
+
+]
