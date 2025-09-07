@@ -51,24 +51,45 @@ def calculate_portfolio_risk(target_portfolio, asset_info):
             print(f"WARNING: Asset '{asset}' not found in '{ASSET_FILE}'. Not included in risk calculation.")
     return total_risk_score
 
-def calculate_portfolio_return(target_portfolio, asset_info):
+def calculate_portfolio_return(portfolio_distribution, asset_info, scenario='base'):
     """
-    Calculates the total expected return of the portfolio based on asset returns and currency appreciation.
-    Returns the weighted average expected return.
+    Varlık getirileri ve kur artışına göre portföyün toplam beklenen getirisini hesaplar.
+    Kur artışı beklentisini "USD TRY Based" varlığından alır.
     """
+    if not portfolio_distribution: return 0
+    
+    scenario_keys = {
+        "base": "expected_percentage_return",
+        "good": "good_scenario_return",
+        "bad": "bad_scenario_return"
+    }
+    key = scenario_keys.get(scenario, "expected_percentage_return")
+    
     total_return_percent = 0
-    usd_return_expectation = asset_info.get("USD", {}).get('expected_return_percent', asset_info.get("USD", {}).get('beklenen_getiri_yuzde', 0))
-    for asset, percent in target_portfolio.items():
+    
+    # --- DEĞİŞİKLİK BURADA ---
+    # Kur artışı beklentisi artık "USD TRY Based" varlığından alınıyor.
+    usd_try_return_expectation = asset_info.get("USD TRY Based", {}).get(key, 0)
+    
+    for asset, percent in portfolio_distribution.items():
         if asset in asset_info:
-            asset_return = asset_info[asset].get('expected_percentage_return', 0)
-            usd_based = asset_info[asset].get('is_usd_based', False)
-            if usd_based:
-                combined_return = (1 + asset_return) * (1 + usd_return_expectation) - 1
+            # "USD TRY Based" varlığının kendisi, zaten kur artışını temsil ettiği için
+            # ayrıca bir birleştirme işlemine tabi tutulmaz.
+            if asset == "USD TRY Based":
+                total_return_percent += percent * usd_try_return_expectation
+                continue
+
+            asset_return = asset_info[asset].get(key, 0)
+            is_usd_based = asset_info[asset].get('is_usd_based', False)
+            
+            if is_usd_based:
+                # Dolar bazlı diğer varlıkların getirisi, kur artışıyla birleştirilir.
+                combined_return = (1 + asset_return) * (1 + usd_try_return_expectation) - 1
                 total_return_percent += percent * combined_return
             else:
+                # TL bazlı varlıkların getirisi doğrudan eklenir.
                 total_return_percent += percent * asset_return
-        else:
-            print(f"WARNING: Asset '{asset}' not found in '{ASSET_FILE}'. Not included in return calculation.")
+                
     return total_return_percent
 
 def show_distribution_and_report(name, principal, target_portfolio, asset_info):
