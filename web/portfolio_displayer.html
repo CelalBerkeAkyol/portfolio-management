@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portföy Karşılaştırma Aracı</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        background-color: #f8f9fa;
+        color: #343a40;
+        max-width: 1400px;
+        margin: 20px auto;
+        padding: 20px;
+      }
+      .container {
+        background-color: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      }
+      h1,
+      h2,
+      h3 {
+        text-align: center;
+        color: #2c3e50;
+      }
+      h1 {
+        font-size: 2.2em;
+      }
+      h2 {
+        font-size: 1.8em;
+        margin-top: 40px;
+        border-bottom: 2px solid #f1f3f5;
+        padding-bottom: 15px;
+      }
+      h3 {
+        font-size: 1.4em;
+        color: #34495e;
+        margin-bottom: 20px;
+        text-align: left;
+      }
+
+      .person-selector-container {
+        margin-bottom: 30px;
+        text-align: center;
+      }
+      .person-selector-container label {
+        font-size: 1.2em;
+        font-weight: 600;
+        margin-right: 15px;
+      }
+      #person-selector {
+        padding: 12px;
+        font-size: 1.1em;
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        min-width: 300px;
+      }
+
+      #results {
+        margin-top: 40px;
+        display: none;
+      }
+      .results-row {
+        margin-bottom: 30px;
+      }
+      .card {
+        background: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        border: 1px solid #e9ecef;
+        height: 100%;
+        box-sizing: border-box;
+      }
+
+      .charts-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+      }
+
+      /* GÜNCELLENDİ: Aksiyon tablosu daha geniş */
+      .details-grid {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr; /* Aksiyon tablosu daha geniş */
+        gap: 30px;
+      }
+
+      @media (max-width: 1200px) {
+        .charts-container,
+        .details-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .chart-wrapper {
+        position: relative;
+        height: 400px;
+      }
+
+      #actions-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      #actions-table th,
+      #actions-table td {
+        border: 1px solid #dee2e6;
+        padding: 12px;
+        text-align: right;
+      }
+      #actions-table th {
+        background-color: #f1f3f5;
+        font-weight: 600;
+      }
+      #actions-table td:first-child,
+      #actions-table th:first-child {
+        text-align: left;
+        font-weight: 600;
+      }
+      #actions-table tbody tr:nth-child(even) {
+        background-color: #f8f9fa;
+      }
+      .change-positive {
+        color: #28a745;
+        font-weight: 700;
+      }
+      .change-negative {
+        color: #dc3545;
+        font-weight: 700;
+      }
+
+      .scenario-card {
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        margin-bottom: 15px;
+      }
+      .scenario-card:last-child {
+        margin-bottom: 0;
+      }
+      .scenario-card h4 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 1.1em;
+        color: #495057;
+        text-align: center;
+      }
+      .scenario-comparison {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        text-align: center;
+      }
+      .scenario-return {
+        font-size: 1.7em;
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+      .return-positive {
+        color: #28a745;
+      }
+      .return-negative {
+        color: #dc3545;
+      }
+      .scenario-value {
+        font-size: 1em;
+        color: #6c757d;
+        font-weight: 600;
+      }
+      .asset-label {
+        font-size: 0.8em;
+        color: #6c757d;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Portföy Karşılaştırma Aracı</h1>
+
+      <div class="person-selector-container">
+        <label for="person-selector">Analiz Edilecek Kişiyi Seçin:</label>
+        <select id="person-selector"></select>
+      </div>
+
+      <div id="results">
+        <div class="results-row charts-container">
+          <div class="card">
+            <h3 style="text-align: center">Mevcut Portföy Dağılımı</h3>
+            <div class="chart-wrapper">
+              <canvas id="currentPieChart"></canvas>
+            </div>
+          </div>
+          <div class="card">
+            <h3 style="text-align: center">Hedef Portföy Dağılımı</h3>
+            <div class="chart-wrapper">
+              <canvas id="targetPieChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="results-row details-grid">
+          <div class="card">
+            <h3>Portföy Dengeleme Aksiyonları</h3>
+            <table id="actions-table">
+              <thead>
+                <tr>
+                  <th>Varlık</th>
+                  <th>Mevcut Tutar</th>
+                  <th>Hedef Tutar</th>
+                  <th>Aksiyon (Al / Sat)</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="card" id="scenarios-card"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // YENİ: Datalabels eklentisini global olarak kaydet
+      Chart.register(ChartDataLabels);
+
+      let currentPieChart = null;
+      let targetPieChart = null;
+      let peopleData = [];
+      let assetInfo = {};
+
+      // Veri yükleme ve uygulama başlatma kodları aynı...
+      document.addEventListener("DOMContentLoaded", async function () {
+        /* ... */
+      });
+      function initializeApp() {
+        /* ... */
+      }
+      function populatePersonSelector() {
+        /* ... */
+      }
+      function calculateAndDisplay(personIndex) {
+        /* ... */
+      }
+      function calculatePortfolioRisk(portfolioDistribution, assetInfo) {
+        /* ... */
+      }
+      function calculatePortfolioReturn(
+        portfolioDistribution,
+        assetInfo,
+        scenario = "base"
+      ) {
+        /* ... */
+      }
+
+      // --- GÜNCELLENDİ: displayResults fonksiyonunun içeriği değişti ---
+      function displayResults(data) {
+        const fC = (num) =>
+          num.toLocaleString("tr-TR", { style: "currency", currency: "TRY" });
+        const fChange = (num) => {
+          const sign = num > 0 ? "+" : "";
+          return `${sign}${num.toLocaleString("tr-TR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}`;
+        };
+
+        const resultsContainer = document.getElementById("results");
+
+        // Aksiyon Tablosu HTML'ini oluştur
+        let actionsHTML = "";
+        data.allAssets.forEach((asset) => {
+          const currentAmount = data.current.amounts[asset] || 0;
+          const targetAmount = data.target.amounts[asset] || 0;
+          const changeAmount = targetAmount - currentAmount;
+          const currentPercent =
+            data.current.principal > 0
+              ? (currentAmount / data.current.principal) * 100
+              : 0;
+          const targetPercent =
+            data.target.principal > 0
+              ? (targetAmount / data.target.principal) * 100
+              : 0;
+
+          actionsHTML += `
+                    <tr>
+                        <td>${asset}</td>
+                        <td>${fC(currentAmount)} (${currentPercent.toFixed(
+            1
+          )}%)</td>
+                        <td>${fC(targetAmount)} (${targetPercent.toFixed(
+            1
+          )}%)</td>
+                        <td class="${
+                          changeAmount >= 0
+                            ? "change-positive"
+                            : "change-negative"
+                        }">${fChange(changeAmount)} TL</td>
+                    </tr>
+                `;
+        });
+
+        // Senaryo Analizi HTML'ini oluştur
+        let scenariosHTML = "<h3>Senaryo Analizi Karşılaştırması</h3>";
+        ["bad", "base", "good"].forEach((s) => {
+          const scenarioName =
+            s === "bad"
+              ? "Kötü Senaryo"
+              : s === "base"
+              ? "Baz Senaryo"
+              : "İyi Senaryo";
+          const currentReturn = calculatePortfolioReturn(
+            data.current.percents,
+            assetInfo,
+            s
+          );
+          const targetReturn = calculatePortfolioReturn(
+            data.target.percents,
+            assetInfo,
+            s
+          );
+
+          scenariosHTML += `
+                    <div class="scenario-card">
+                        <h4>${scenarioName}</h4>
+                        <div class="scenario-comparison">
+                            <div>
+                                <span class="asset-label">Mevcut Portföy</span>
+                                <div class="scenario-return ${
+                                  currentReturn >= 0
+                                    ? "return-positive"
+                                    : "return-negative"
+                                }">%${(currentReturn * 100).toFixed(2)}</div>
+                                <div class="scenario-value">${fC(
+                                  data.current.principal * (1 + currentReturn)
+                                )}</div>
+                            </div>
+                            <div>
+                                <span class="asset-label">Hedef Portföy</span>
+                                <div class="scenario-return ${
+                                  targetReturn >= 0
+                                    ? "return-positive"
+                                    : "return-negative"
+                                }">%${(targetReturn * 100).toFixed(2)}</div>
+                                <div class="scenario-value">${fC(
+                                  data.target.principal * (1 + targetReturn)
+                                )}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+        });
+
+        // Sonuçları ekrana bas
+        document.querySelector("#actions-table tbody").innerHTML = actionsHTML;
+        document.getElementById("scenarios-card").innerHTML = scenariosHTML;
+
+        // Grafikleri Çiz
+        drawPieChart("currentPieChart", "Mevcut Dağılım", data.current.amounts);
+        drawPieChart("targetPieChart", "Hedef Dağılım", data.target.amounts);
+
+        resultsContainer.style.display = "block";
+      }
+
+      // --- GÜNCELLENDİ: drawPieChart fonksiyonu Datalabels eklentisini kullanıyor ---
+      function drawPieChart(canvasId, title, chartDataObj) {
+        const chartCanvas = document.getElementById(canvasId);
+        if (!chartCanvas) return;
+
+        if (canvasId === "currentPieChart" && currentPieChart)
+          currentPieChart.destroy();
+        if (canvasId === "targetPieChart" && targetPieChart)
+          targetPieChart.destroy();
+
+        const labels = Object.keys(chartDataObj).filter(
+          (key) => chartDataObj[key] > 0
+        );
+        const data = Object.values(chartDataObj).filter((val) => val > 0);
+
+        const chart = new Chart(chartCanvas.getContext("2d"), {
+          type: "doughnut",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: title,
+                data: data,
+                backgroundColor: [
+                  "#4e73df",
+                  "#1cc88a",
+                  "#36b9cc",
+                  "#f6c23e",
+                  "#e74a3b",
+                  "#858796",
+                  "#5a5c69",
+                  "#fd7e14",
+                  "#5e35b1",
+                  "#d81b60",
+                  "#66bb6a",
+                  "#ffa726",
+                ],
+                borderColor: "#ffffff",
+                borderWidth: 2,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: true,
+                position: "bottom",
+                labels: { padding: 20 },
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    const label = context.label || "";
+                    const currentValue = context.raw || 0;
+                    const total = context.dataset.data.reduce(
+                      (a, b) => a + b,
+                      0
+                    );
+                    const percentage =
+                      total > 0 ? (currentValue / total) * 100 : 0;
+                    const formattedValue = currentValue.toLocaleString(
+                      "tr-TR",
+                      { style: "currency", currency: "TRY" }
+                    );
+                    return `${label}: ${formattedValue} (${percentage.toFixed(
+                      1
+                    )}%)`;
+                  },
+                },
+              },
+              // YENİ: Datalabels eklentisi için yapılandırma
+              datalabels: {
+                formatter: (value, context) => {
+                  const total = context.chart.data.datasets[0].data.reduce(
+                    (a, b) => a + b,
+                    0
+                  );
+                  const percentage = (value / total) * 100;
+                  // Sadece %5'ten büyük dilimlerin yüzdesini göster
+                  if (percentage < 5) {
+                    return "";
+                  }
+                  return `${percentage.toFixed(1)}%`;
+                },
+                color: "#fff",
+                font: {
+                  weight: "bold",
+                  size: 14,
+                },
+              },
+            },
+            cutout: "60%",
+          },
+        });
+
+        if (canvasId === "currentPieChart") currentPieChart = chart;
+        if (canvasId === "targetPieChart") targetPieChart = chart;
+      }
+
+      // Değişiklik gerektirmeyen fonksiyonların tam içerikleri
+      document.addEventListener("DOMContentLoaded", async function () {
+        try {
+          const [peopleResponse, assetResponse] = await Promise.all([
+            fetch("data/people.json"),
+            fetch("data/asset_info.json"),
+          ]);
+          if (!peopleResponse.ok || !assetResponse.ok) {
+            throw new Error("JSON dosyaları yüklenirken bir ağ hatası oluştu.");
+          }
+          peopleData = await peopleResponse.json();
+          assetInfo = await assetResponse.json();
+          initializeApp();
+        } catch (error) {
+          console.error("Veri yükleme hatası:", error);
+          document.querySelector(
+            ".container"
+          ).innerHTML = `<h1>Hata: Veri dosyaları yüklenemedi.</h1><p>Lütfen 'data' klasörünün ve içindeki JSON dosyalarının doğru yerde olduğundan emin olun. Bu sayfayı bir lokal sunucu üzerinden çalıştırdığınızdan emin olun.</p>`;
+        }
+      });
+      function initializeApp() {
+        populatePersonSelector();
+        const personSelector = document.getElementById("person-selector");
+        personSelector.addEventListener("change", function () {
+          calculateAndDisplay(this.value);
+        });
+        calculateAndDisplay(0);
+      }
+      function populatePersonSelector() {
+        const personSelector = document.getElementById("person-selector");
+        personSelector.innerHTML = "";
+        peopleData.forEach((person, index) => {
+          const option = document.createElement("option");
+          option.value = index;
+          option.textContent = person.name;
+          personSelector.appendChild(option);
+        });
+      }
+      function calculateAndDisplay(personIndex) {
+        const person = peopleData[personIndex];
+        if (!person) return;
+        const currentAmountDist = person.current_values || {};
+        const targetPortfolioDef = person.target_portfolio || {};
+        const overallPrincipal = Object.values(currentAmountDist).reduce(
+          (a, b) => a + b,
+          0
+        );
+        if (overallPrincipal === 0) {
+          document.getElementById("results").style.display = "none";
+          return;
+        }
+        const currentPercentDist = {};
+        for (const [asset, amount] of Object.entries(currentAmountDist)) {
+          currentPercentDist[asset] = amount / overallPrincipal;
+        }
+        const targetAmountDist = {};
+        for (const [asset, percent] of Object.entries(targetPortfolioDef)) {
+          targetAmountDist[asset] = overallPrincipal * percent;
+        }
+        const resultsData = {
+          personName: person.name,
+          allAssets: [
+            ...new Set([
+              ...Object.keys(currentAmountDist),
+              ...Object.keys(targetPortfolioDef),
+            ]),
+          ].sort(
+            (a, b) => (currentAmountDist[b] || 0) - (currentAmountDist[a] || 0)
+          ),
+          current: {
+            principal: overallPrincipal,
+            amounts: currentAmountDist,
+            percents: currentPercentDist,
+          },
+          target: {
+            principal: overallPrincipal,
+            amounts: targetAmountDist,
+            percents: targetPortfolioDef,
+          },
+        };
+        displayResults(resultsData);
+      }
+      function calculatePortfolioRisk(portfolioDistribution, assetInfo) {
+        let totalRiskScore = 0;
+        if (!portfolioDistribution) return 0;
+        for (const [asset, percent] of Object.entries(portfolioDistribution)) {
+          if (assetInfo[asset]) {
+            totalRiskScore += percent * (assetInfo[asset].risk_score || 0);
+          }
+        }
+        return totalRiskScore;
+      }
+      function calculatePortfolioReturn(
+        portfolioDistribution,
+        assetInfo,
+        scenario = "base"
+      ) {
+        if (!portfolioDistribution) return 0;
+        const scenario_keys = {
+          base: "expected_percentage_return",
+          good: "good_scenario_return",
+          bad: "bad_scenario_return",
+        };
+        const key = scenario_keys[scenario];
+        let totalReturnPercent = 0;
+        const usd_try_return_expectation =
+          assetInfo["USD TRY Based"]?.[key] || 0;
+        for (const [asset, percent] of Object.entries(portfolioDistribution)) {
+          if (assetInfo[asset]) {
+            if (asset === "USD TRY Based") {
+              totalReturnPercent += percent * usd_try_return_expectation;
+              continue;
+            }
+            let assetReturn = assetInfo[asset][key] || 0;
+            if (assetInfo[asset].is_usd_based) {
+              assetReturn =
+                (1 + assetReturn) * (1 + usd_try_return_expectation) - 1;
+            }
+            totalReturnPercent += percent * assetReturn;
+          }
+        }
+        return totalReturnPercent;
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yatırımcı Risk Profili Testi</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        background-color: #f8f9fa;
+        color: #343a40;
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 20px;
+      }
+      .container {
+        background-color: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      }
+      h1,
+      h2 {
+        text-align: center;
+        color: #2c3e50;
+      }
+      h1 {
+        font-size: 2.2em;
+      }
+      h2 {
+        font-size: 1.8em;
+        margin-top: 40px;
+      }
+      p.intro {
+        text-align: center;
+        font-size: 1.1em;
+        color: #6c757d;
+        margin-bottom: 30px;
+      }
+
+      /* Soru Kartı Stili */
+      .question-card {
+        background-color: #fff;
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        padding: 25px;
+        margin-bottom: 20px;
+      }
+      .question-text {
+        font-weight: 600;
+        font-size: 1.2em;
+        margin-bottom: 20px;
+      }
+      .options-container .option {
+        display: block;
+        margin-bottom: 10px;
+      }
+      .options-container label {
+        display: block;
+        padding: 15px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .options-container input[type="radio"] {
+        display: none; /* Radyo butonunu gizle */
+      }
+      .options-container input[type="radio"]:checked + label {
+        background-color: #e8f0fe;
+        border-color: #007bff;
+        font-weight: 600;
+        color: #004085;
+      }
+      .options-container label:hover {
+        background-color: #f1f3f5;
+      }
+
+      /* Buton Stili */
+      .button-container {
+        text-align: center;
+        margin-top: 30px;
+      }
+      #submit-btn {
+        background-color: #28a745;
+        color: white;
+        padding: 15px 40px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.2em;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      #submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        background-color: #218838;
+      }
+
+      /* Sonuç Kartı Stili */
+      #results-container {
+        display: none; /* Başlangıçta gizli */
+        margin-top: 40px;
+        padding: 30px;
+        border-radius: 12px;
+        text-align: center;
+      }
+      #results-container.low-risk {
+        background-color: #e8f0fe;
+        border: 2px solid #007bff;
+      }
+      #results-container.medium-risk {
+        background-color: #fff3cd;
+        border: 2px solid #ffc107;
+      }
+      #results-container.high-risk {
+        background-color: #f8d7da;
+        border: 2px solid #dc3545;
+      }
+
+      .result-score {
+        font-size: 1.5em;
+        font-weight: 500;
+      }
+      .result-score span {
+        font-size: 2.5em;
+        font-weight: 700;
+        display: block;
+        margin-bottom: 10px;
+      }
+      .result-profile {
+        font-size: 2em;
+        font-weight: 700;
+        margin: 20px 0;
+      }
+      .result-description {
+        font-size: 1.1em;
+        line-height: 1.6;
+        max-width: 700px;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Yatırımcı Risk Profili Testi</h1>
+      <p class="intro">
+        Yatırım alışkanlıklarınızı ve risk toleransınızı anlamak için aşağıdaki
+        soruları cevaplayın.
+      </p>
+
+      <div id="questionnaire-container"></div>
+
+      <div class="button-container">
+        <button id="submit-btn">Sonucu Hesapla</button>
+      </div>
+
+      <div id="results-container">
+        <p class="result-score">
+          Toplam Puanınız: <span id="total-score"></span>
+        </p>
+        <h2 class="result-profile" id="profile-name"></h2>
+        <p class="result-description" id="profile-description"></p>
+      </div>
+    </div>
+
+    <script>
+      const quizData = {
+        risk_questions: [
+          {
+            question_id: 1,
+            question_text:
+              "Bir yatırımınızın değeri bir ay içinde %10 düştüğünde ne hissedersiniz?",
+            options: [
+              {
+                option_id: "A",
+                option_text:
+                  "Panik yapar, endişelenir ve hemen satmayı düşünürüm.",
+                score: 2,
+              },
+              {
+                option_id: "B",
+                option_text:
+                  "Endişelenirim ama durumun geçici olabileceğini düşünerek beklemeye karar veririm.",
+                score: 6,
+              },
+              {
+                option_id: "C",
+                option_text:
+                  "Bu durumu normal karşılar, hatta daha fazla alım fırsatı olarak görürüm.",
+                score: 10,
+              },
+            ],
+          },
+          {
+            question_id: 2,
+            question_text:
+              "Yatırım yapmayı düşündüğünüz para, genel bütçenizin ne kadarını oluşturuyor?",
+            options: [
+              {
+                option_id: "A",
+                option_text:
+                  "Kaybetmeyi göze alamayacağım, günlük yaşam giderlerim için ayırdığım paranın büyük bir kısmı.",
+                score: 1,
+              },
+              {
+                option_id: "B",
+                option_text:
+                  "Bir miktarını kaybetmem beni üzse de, yaşamımı etkilemeyecek bir kısmı.",
+                score: 5,
+              },
+              {
+                option_id: "C",
+                option_text:
+                  "Uzun vadeli birikimim, kaybetsem dahi finansal durumumu ciddi şekilde etkilemeyecek bir para.",
+                score: 10,
+              },
+            ],
+          },
+          {
+            question_id: 3,
+            question_text:
+              "Bir yatırımın yüksek getiri potansiyeli ile yüksek risk taşıması durumunda ne yaparsınız?",
+            options: [
+              {
+                option_id: "A",
+                option_text:
+                  "Riskli yatırımlardan tamamen kaçınır, güvenli ve istikrarlı seçenekleri tercih ederim.",
+                score: 2,
+              },
+              {
+                option_id: "B",
+                option_text:
+                  "Portföyümün küçük bir kısmını riskli yatırımlara ayırabilirim, ancak ana paramı korurum.",
+                score: 6,
+              },
+              {
+                option_id: "C",
+                option_text:
+                  "Yüksek getiri peşinde koşan biriyim ve bu tür riskleri almaktan çekinmem.",
+                score: 9,
+              },
+            ],
+          },
+          {
+            question_id: 4,
+            question_text:
+              "Yatırımlarınızı ne kadar süreyle elde tutmayı planlıyorsunuz?",
+            options: [
+              { option_id: "A", option_text: "1 yıldan kısa.", score: 2 },
+              { option_id: "B", option_text: "1-5 yıl arası.", score: 6 },
+              { option_id: "C", option_text: "5 yıldan uzun.", score: 10 },
+            ],
+          },
+          {
+            question_id: 5,
+            question_text:
+              "Finansal piyasalar ve yatırım araçları hakkında ne kadar bilgi sahibisiniz?",
+            options: [
+              {
+                option_id: "A",
+                option_text:
+                  "Çok az veya hiç bilgim yok. Temel terimlere bile yabancıyım.",
+                score: 3,
+              },
+              {
+                option_id: "B",
+                option_text:
+                  "Temel bilgim var, piyasaları ara sıra takip ederim.",
+                score: 6,
+              },
+              {
+                option_id: "C",
+                option_text:
+                  "Konuya hakimim, düzenli olarak araştırma yapar ve gelişmeleri yakından izlerim.",
+                score: 10,
+              },
+            ],
+          },
+          {
+            question_id: 6,
+            question_text:
+              "10.000 TL yatırımınızın bir ay içinde 8.000 TL'ye düştüğünü görseniz ne yaparsınız?",
+            options: [
+              {
+                option_id: "A",
+                option_text: "Hemen satar, zararı durdururum.",
+                score: 1,
+              },
+              {
+                option_id: "B",
+                option_text: "Bekler, piyasanın toparlanmasını umarım.",
+                score: 5,
+              },
+              {
+                option_id: "C",
+                option_text:
+                  "Temel değerleri değişmediyse, ek alım yaparak ortalamamı düşürürüm.",
+                score: 10,
+              },
+            ],
+          },
+          {
+            question_id: 7,
+            question_text:
+              "Acil durumlar için birikiminizin ne kadarı kolayca erişilebilir durumda?",
+            options: [
+              {
+                option_id: "A",
+                option_text:
+                  "Çok az veya hiç yok. Paramın tamamı uzun vadeli yatırımlarda.",
+                score: 2,
+              },
+              {
+                option_id: "B",
+                option_text: "3-6 aylık giderlerimi karşılayacak kadar.",
+                score: 6,
+              },
+              {
+                option_id: "C",
+                option_text: "6 aydan daha fazla giderimi karşılayacak kadar.",
+                score: 10,
+              },
+            ],
+          },
+          {
+            question_id: 8,
+            question_text:
+              "Aşağıdaki yatırım araçlarından hangisi size en cazip geliyor?",
+            options: [
+              {
+                option_id: "A",
+                option_text: "Vadeli mevduat, devlet tahvilleri.",
+                score: 1,
+              },
+              {
+                option_id: "B",
+                option_text:
+                  "Mavi çipli hisse senetleri (köklü şirketler), dengeli yatırım fonları.",
+                score: 6,
+              },
+              {
+                option_id: "C",
+                option_text:
+                  "Kripto paralar, girişim sermayesi fonları, spekülatif hisse senetleri.",
+                score: 10,
+              },
+            ],
+          },
+          {
+            question_id: 9,
+            question_text:
+              "Piyasa haberlerindeki olumsuzluklar ve dalgalanmalar sizi nasıl etkiler?",
+            options: [
+              {
+                option_id: "A",
+                option_text:
+                  "Çok endişelenir ve yatırım kararlarımı gözden geçiririm.",
+                score: 2,
+              },
+              {
+                option_id: "B",
+                option_text:
+                  "Kısa süreliğine endişelenirim ama mantıklı kalmaya çalışırım.",
+                score: 5,
+              },
+              {
+                option_id: "C",
+                option_text:
+                  "Piyasa döngülerinin doğal bir parçası olarak görür, sakin kalırım.",
+                score: 9,
+              },
+            ],
+          },
+          {
+            question_id: 10,
+            question_text: "Yatırım yaparken ana motivasyonunuz nedir?",
+            options: [
+              {
+                option_id: "A",
+                option_text:
+                  "Paramı enflasyona karşı korumak ve güvenli bir şekilde büyütmek.",
+                score: 3,
+              },
+              {
+                option_id: "B",
+                option_text: "Dengeli bir büyüme ve iyi bir getiri elde etmek.",
+                score: 7,
+              },
+              {
+                option_id: "C",
+                option_text:
+                  "Yüksek getiri potansiyelinden yararlanmak ve hızlı zengin olmak.",
+                score: 10,
+              },
+            ],
+          },
+        ],
+      };
+
+      const questionnaireContainer = document.getElementById(
+        "questionnaire-container"
+      );
+      const submitBtn = document.getElementById("submit-btn");
+      const resultsContainer = document.getElementById("results-container");
+
+      // 1. Soruları Ekrana Yazdır
+      function renderQuestions() {
+        let html = "";
+        quizData.risk_questions.forEach((q) => {
+          html += `
+                    <div class="question-card">
+                        <p class="question-text">${q.question_id}. ${
+            q.question_text
+          }</p>
+                        <div class="options-container">
+                            ${q.options
+                              .map(
+                                (opt) => `
+                                <div class="option">
+                                    <input type="radio" id="q${q.question_id}-opt${opt.option_id}" name="question-${q.question_id}" value="${opt.score}">
+                                    <label for="q${q.question_id}-opt${opt.option_id}">${opt.option_text}</label>
+                                </div>
+                            `
+                              )
+                              .join("")}
+                        </div>
+                    </div>
+                `;
+        });
+        questionnaireContainer.innerHTML = html;
+      }
+
+      // 2. Puanlara Göre Profili Belirle
+      function getProfile(score) {
+        if (score <= 35) {
+          return {
+            name: "Düşük Riskli (Muhafazakar)",
+            description:
+              "Ana paranızı korumak sizin için en büyük öncelik. Düşük riskli ve istikrarlı getiriler sunan yatırım araçları (vadeli mevduat, devlet tahvilleri, para piyasası fonları gibi) sizin için daha uygundur. Piyasadaki dalgalanmalardan rahatsız olursunuz ve güvenli limanları tercih edersiniz.",
+            className: "low-risk",
+          };
+        } else if (score <= 65) {
+          return {
+            name: "Orta Riskli (Dengeli)",
+            description:
+              "Ana paranızı korurken aynı zamanda makul bir getiri elde etmeyi hedeflersiniz. Portföyünüzü hem güvenli hem de bir miktar büyüme potansiyeli olan varlıklar arasında (dengeli fonlar, köklü şirketlerin hisse senetleri, gayrimenkul yatırım fonları gibi) çeşitlendirmek sizin için idealdir. Belirli bir seviyeye kadar riski kabul edebilirsiniz.",
+            className: "medium-risk",
+          };
+        } else {
+          return {
+            name: "Yüksek Riskli (Agresif)",
+            description:
+              "Yüksek getiri potansiyeli için yüksek risk almaktan çekinmezsiniz. Piyasadaki dalgalanmaları birer fırsat olarak görürsünüz. Büyüme odaklı hisse senetleri, kripto paralar ve değişken fonlar gibi yüksek volatiliteye sahip varlıklar ilginizi çeker. Uzun vadeli bir bakış açınız vardır ve kısa vadeli düşüşler sizi panikletmez.",
+            className: "high-risk",
+          };
+        }
+      }
+
+      // 3. Butona Tıklanınca Hesapla ve Göster
+      submitBtn.addEventListener("click", function () {
+        let totalScore = 0;
+        let answeredQuestions = 0;
+
+        quizData.risk_questions.forEach((q) => {
+          const selectedOption = document.querySelector(
+            `input[name="question-${q.question_id}"]:checked`
+          );
+          if (selectedOption) {
+            totalScore += parseInt(selectedOption.value);
+            answeredQuestions++;
+          }
+        });
+
+        if (answeredQuestions < quizData.risk_questions.length) {
+          alert("Lütfen tüm soruları cevaplayın!");
+          return;
+        }
+
+        const profile = getProfile(totalScore);
+
+        document.getElementById("total-score").textContent = totalScore;
+        document.getElementById("profile-name").textContent = profile.name;
+        document.getElementById("profile-description").textContent =
+          profile.description;
+
+        resultsContainer.className = ""; // Önceki sınıfları temizle
+        resultsContainer.classList.add(profile.className);
+        resultsContainer.style.display = "block";
+
+        // Sonuçları görmek için sayfayı aşağı kaydır
+        resultsContainer.scrollIntoView({ behavior: "smooth" });
+      });
+
+      // Sayfa yüklendiğinde soruları oluştur
+      renderQuestions();
+    </script>
+  </body>
+</html>
