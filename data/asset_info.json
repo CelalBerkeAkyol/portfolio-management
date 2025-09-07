@@ -11,9 +11,9 @@
   "TRY Based Interest": {
     "risk_score": 2,
     "expected_return_description": "Around inflation",
-    "expected_percentage_return": 0.15,
-    "bad_scenario_return": 0.2,
-    "good_scenario_return": 0.1,
+    "expected_percentage_return": 0.14,
+    "bad_scenario_return": 0.17,
+    "good_scenario_return": 0.115,
     "is_usd_based": false,
     "description": "TRY-based interest income and money market funds"
   },
@@ -21,8 +21,8 @@
     "risk_score": 1,
     "expected_return_description": "Above USD inflation",
     "expected_percentage_return": 0.035,
-    "bad_scenario_return": 0.02,
-    "good_scenario_return": 0.055,
+    "bad_scenario_return": 0.055,
+    "good_scenario_return": 0.025,
     "is_usd_based": true,
     "description": "USD-based interest income and foreign money market funds"
   },
@@ -56,16 +56,16 @@
   "Turkish Fund": {
     "risk_score": 9,
     "expected_return_description": "High",
-    "expected_percentage_return": 0.35,
+    "expected_percentage_return": 0.25,
     "bad_scenario_return": -0.2,
-    "good_scenario_return": 0.5,
+    "good_scenario_return": 0.35,
     "is_usd_based": false,
     "description": "Fund traded on TEFAS."
   },
   "Turkish Spec Stocks": {
     "risk_score": 9,
-    "expected_return_description": "High",
-    "expected_percentage_return": 0.35,
+    "expected_return_description": "Very High",
+    "expected_percentage_return": 0.5,
     "bad_scenario_return": -0.4,
     "good_scenario_return": 0.75,
     "is_usd_based": false,
@@ -74,18 +74,18 @@
   "Turkish Grow Stocks": {
     "risk_score": 7,
     "expected_return_description": "High",
-    "expected_percentage_return": 0.35,
-    "bad_scenario_return": -0.4,
-    "good_scenario_return": 0.75,
+    "expected_percentage_return": 0.28,
+    "bad_scenario_return": -0.2,
+    "good_scenario_return": 0.4,
     "is_usd_based": false,
     "description": "Stocks traded on Borsa Istanbul."
   },
   "Turkish Value Stocks": {
     "risk_score": 6,
     "expected_return_description": "High",
-    "expected_percentage_return": 0.35,
-    "bad_scenario_return": -0.4,
-    "good_scenario_return": 0.75,
+    "expected_percentage_return": 0.25,
+    "bad_scenario_return": -0.15,
+    "good_scenario_return": 0.4,
     "is_usd_based": false,
     "description": "Stocks traded on Borsa Istanbul."
   },
@@ -101,9 +101,9 @@
   "BTC": {
     "risk_score": 8,
     "expected_return_description": "Very High",
-    "expected_percentage_return": 0.25,
-    "bad_scenario_return": -0.2,
-    "good_scenario_return": 0.3,
+    "expected_percentage_return": 0.2,
+    "bad_scenario_return": -0.25,
+    "good_scenario_return": 0.35,
     "is_usd_based": true,
     "description": "Digital like Bitcoin."
   },

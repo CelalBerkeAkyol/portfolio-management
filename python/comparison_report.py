@@ -3,8 +3,8 @@
 import json
 import sys
 
-PEOPLE_FILE = "data/people.json"
-ASSET_FILE = "data/asset_info.json"
+PEOPLE_FILE = "../data/people.json"
+ASSET_FILE = "../data/asset_info.json"
 
 def load_file(file_path):
     try:

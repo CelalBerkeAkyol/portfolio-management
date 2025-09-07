@@ -6,8 +6,8 @@ import sys
 # It is easier to edit the ratios in the JSON file than to enter them one by one here.
 
 # File paths
-ASSET_FILE = "data/asset_info.json"
-PEOPLE_FILE = "data/people.json"
+ASSET_FILE = "../data/asset_info.json"
+PEOPLE_FILE = "../data/people.json"
 
 
 def load_file(file_path):
