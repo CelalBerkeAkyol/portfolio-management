@@ -469,8 +469,8 @@
       document.addEventListener("DOMContentLoaded", async function () {
         try {
           const [peopleResponse, assetResponse] = await Promise.all([
-            fetch("data/people.json"),
-            fetch("data/asset_info.json"),
+            fetch("../data/people.json"),
+            fetch("../data/asset_info.json"),
           ]);
           if (!peopleResponse.ok || !assetResponse.ok) {
             throw new Error("JSON dosyaları yüklenirken bir ağ hatası oluştu.");
