@@ -34,10 +34,9 @@ These JSON files serve as the central database for the entire toolkit.
   - **`name`**: The full name of the portfolio owner.
   - **`risk_score`**: The calculated risk tolerance score, typically generated from the risk questionnaire.
   - **`principal`**: The total current market value of the portfolio in TL.
-  - **`base_portfolio_distribution`**: A user-defined dictionary of assets and their target percentages for the core, long-term "untouchable" part of the portfolio.
   - **`target_portfolio`**: A user-defined dictionary of assets and their ideal percentages. This is used as the benchmark for rebalancing.
-  - **`current_values` / `amount_distribution`**: The current market value (in TL) of each asset held. This data is primarily updated by the `current_portfolio.py` script.
-  - **`current_portfolio` / `current_portfolio_distribution`**: The calculated percentage distribution of the current holdings, derived from `current_values`.
+  - **`current_values` / `current_values`**: The current market value (in TL) of each asset held. This data is primarily updated by the `current_portfolio.py` script.
+  - **`current_portfolio` / `current_portfolio`**: The calculated percentage distribution of the current holdings, derived from `current_values`.
 
 ### 2. Python Scripts (`/python/`)
 
