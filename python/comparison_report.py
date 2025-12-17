@@ -4,11 +4,13 @@ from us_sector_calculator import (
     load_sector_config, 
     validate_sector_percentages,
     calculate_us_sector_allocation,
-    get_sector_summary_table
+    get_sector_summary_table,
+    get_usd_rate
 )
 
 PEOPLE_FILE = "../data/people.json"
 ASSET_FILE = "../data/asset_info.json"
+CURRENCY_FILE = "../data/currency.json"
 
 def load_file(file_path):
     try:
@@ -147,7 +149,7 @@ def show_comparison_report(name, principal, current_dist, target_dist, asset_inf
 
 def show_us_sector_analysis(name, principal, target_dist):
     """
-    Amerika sektörel dağılımını Foreign Stocks hedef oranı üzerinden gösterir.
+    Amerika sektörel dağılımını Foreign Stocks hedef oranı üzerinden gösterir (USD bazlı).
     """
     foreign_stocks_allocation = target_dist.get("Foreign Stocks", 0) if target_dist else 0
     if foreign_stocks_allocation <= 0:
@@ -158,13 +160,18 @@ def show_us_sector_analysis(name, principal, target_dist):
         print("\nAmerika sektör konfigürasyonu yüklenemedi veya geçersiz.")
         return
     
+    usd_rate = get_usd_rate()
     sector_allocation = calculate_us_sector_allocation(principal, foreign_stocks_allocation, sector_config)
+    
+    us_total_tl = principal * foreign_stocks_allocation
+    us_total_usd = us_total_tl / usd_rate
     
     print("\n" + "="*70)
     print(f"AMERİKA SEKTÖREL DAĞILIM ANALİZİ - {name}")
     print("="*70)
-    print(f"Toplam Portföy: {principal:,.2f} TL")
-    print(f"Amerika'ya Ayrılan: {principal * foreign_stocks_allocation:,.2f} TL (%{foreign_stocks_allocation*100:.0f})")
+    print(f"Toplam Portföy: {principal:,.2f} TL (${principal/usd_rate:,.2f})")
+    print(f"Amerika'ya Ayrılan: ${us_total_usd:,.2f} USD (%{foreign_stocks_allocation*100:.0f})")
+    print(f"                 = {us_total_tl:,.2f} TL (Kur: {usd_rate:.2f})")
     print(get_sector_summary_table(sector_allocation))
     print("="*70)
 

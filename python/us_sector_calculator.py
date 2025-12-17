@@ -7,6 +7,7 @@ import json
 import sys
 
 SECTOR_CONFIG_FILE = "../data/us_sector_config.json"
+CURRENCY_FILE = "../data/currency.json"
 
 def load_sector_config():
     """
@@ -23,6 +24,19 @@ def load_sector_config():
     except json.JSONDecodeError:
         print(f"Hata: '{SECTOR_CONFIG_FILE}' geçerli bir JSON dosyası değil.")
         return None
+
+def get_usd_rate():
+    """
+    currency.json dosyasından USD/TRY kurunu okur.
+    """
+    try:
+        with open(CURRENCY_FILE, 'r', encoding='utf-8') as f:
+            currency_data = json.load(f)
+            if isinstance(currency_data, dict) and 'USD_TRY' in currency_data:
+                return currency_data['USD_TRY']
+    except:
+        pass
+    return 34.0  # Varsayılan kur
 
 def validate_sector_percentages(sector_config):
     """
@@ -78,31 +92,35 @@ def calculate_us_sector_allocation(principal, foreign_stocks_allocation, sector_
 
 def display_us_sector_allocation(name, principal, foreign_stocks_allocation, sector_allocation):
     """
-    Amerika sektörel dağılımını ekrana yazdırır.
+    Amerika sektörel dağılımını ekrana yazdırır (USD bazlı).
     
     Args:
         name: Kişi adı
-        principal: Toplam anapara
+        principal: Toplam anapara (TL)
         foreign_stocks_allocation: Amerika'ya ayrılan yüzde
         sector_allocation: Sektörel dağılım dictionary'si
     """
-    us_total = principal * foreign_stocks_allocation
+    usd_rate = get_usd_rate()
+    us_total_tl = principal * foreign_stocks_allocation
+    us_total_usd = us_total_tl / usd_rate
     
     print("\n" + "="*70)
     print(f"AMERİKA SEKTÖREL DAĞILIM - {name}")
     print("="*70)
-    print(f"Toplam Portföy: {principal:,.2f} TL")
-    print(f"Amerika Yatırımı: {us_total:,.2f} TL (%{foreign_stocks_allocation*100:.0f})")
+    print(f"Toplam Portföy: {principal:,.2f} TL (${principal/usd_rate:,.2f})")
+    print(f"Amerika Yatırımı: ${us_total_usd:,.2f} USD (%{foreign_stocks_allocation*100:.0f})")
+    print(f"               = {us_total_tl:,.2f} TL (Kur: {usd_rate:.2f})")
     print("-"*70)
     
     for sector_name, sector_data in sector_allocation.items():
-        amount = sector_data['amount']
+        amount_tl = sector_data['amount']
+        amount_usd = amount_tl / usd_rate
         pct_of_us = sector_data['percentage_of_us']
         pct_of_total = sector_data['percentage_of_total']
         description = sector_data['description']
         
         print(f"\n{sector_name}:")
-        print(f"  Miktar: {amount:>15,.2f} TL")
+        print(f"  Miktar: ${amount_usd:>15,.2f} USD ({amount_tl:,.2f} TL)")
         print(f"  ABD içinde: %{pct_of_us*100:.0f}")
         print(f"  Toplam portföyde: %{pct_of_total*100:.1f}")
         print(f"  {description}")
@@ -111,7 +129,7 @@ def display_us_sector_allocation(name, principal, foreign_stocks_allocation, sec
 
 def get_sector_summary_table(sector_allocation):
     """
-    Sektörel dağılımı tablo formatında string olarak döndürür.
+    Sektörel dağılımı tablo formatında string olarak döndürür (USD bazlı).
     
     Args:
         sector_allocation: Sektörel dağılım dictionary'si
@@ -122,17 +140,20 @@ def get_sector_summary_table(sector_allocation):
     if not sector_allocation:
         return "Sektörel dağılım bulunamadı."
     
+    usd_rate = get_usd_rate()
+    
     lines = []
-    lines.append("\n" + "-"*60)
-    lines.append("SEKTÖR                | MİKTAR (TL)    | ABD İÇİNDE")
-    lines.append("-"*60)
+    lines.append("\n" + "-"*75)
+    lines.append("SEKTÖR                | MİKTAR (USD)   | MİKTAR (TL)    | ABD İÇİNDE")
+    lines.append("-"*75)
     
     for sector_name, sector_data in sector_allocation.items():
-        amount = sector_data['amount']
+        amount_tl = sector_data['amount']
+        amount_usd = amount_tl / usd_rate
         pct_of_us = sector_data['percentage_of_us']
-        lines.append(f"{sector_name:<20} | {amount:>13,.2f} | %{pct_of_us*100:>5.0f}")
+        lines.append(f"{sector_name:<20} | ${amount_usd:>12,.2f} | {amount_tl:>13,.2f} | %{pct_of_us*100:>5.0f}")
     
-    lines.append("-"*60)
+    lines.append("-"*75)
     
     return "\n".join(lines)
 

@@ -32,7 +32,7 @@
     "expected_percentage_return": 0.1,
     "bad_scenario_return": -0.05,
     "good_scenario_return": 0.15,
-    "is_usd_based": true,
+    "is_usd_based": false,
     "description": "Gold is generally an asset for value preservation."
   },
   "Silver": {
@@ -41,7 +41,7 @@
     "expected_percentage_return": 0.02,
     "bad_scenario_return": -0.1,
     "good_scenario_return": 0.1,
-    "is_usd_based": true,
+    "is_usd_based": false,
     "description": "Silver can be more volatile than gold."
   },
 

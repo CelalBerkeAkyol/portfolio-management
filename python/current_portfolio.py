@@ -4,6 +4,7 @@ import sys
 # Dosya yolları
 PEOPLE_FILE = "../data/people.json"
 ASSET_FILE = "../data/asset_info.json"
+CURRENCY_FILE = "../data/currency.json"
 
 def load_file(file_path):
     """
@@ -30,6 +31,15 @@ def save_file(data, file_path):
     with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
     print(f"Veri başarıyla '{file_path}' dosyasına kaydedildi.")
+
+def get_usd_rate():
+    """
+    currency.json dosyasından USD/TRY kurunu okur.
+    """
+    currency_data = load_file(CURRENCY_FILE)
+    if isinstance(currency_data, dict) and 'USD_TRY' in currency_data:
+        return currency_data['USD_TRY']
+    return 34.0  # Varsayılan kur
 
 def select_person(people):
     """
@@ -65,23 +75,46 @@ def get_number(message):
         except ValueError:
             print("Hata: Lütfen sadece sayısal bir değer girin.")
 
-def get_current_portfolio_info():
+def get_current_portfolio_info(asset_info):
     """
     Kullanıcıdan mevcut portföy bilgilerini (tutarları) alır.
+    USD bazlı varlıklar için girilen değer dolar olarak kabul edilip TL'ye çevrilir.
     """
-    print("\nLütfen mevcut varlık tutarlarınızı girin (TL cinsinden):")
+    usd_rate = get_usd_rate()
+    print(f"\n*** Güncel Dolar Kuru: {usd_rate:.2f} TL ***")
+    print("\nLütfen mevcut varlık tutarlarınızı girin:")
+    print("NOT: USD bazlı varlıklar (Gold, Silver, Foreign Stocks, BTC, Crypto) için USD değeri giriniz.")
+    print("     TL bazlı varlıklar için TL değeri giriniz.")
     print("***Tüm değerleri sayı olarak giriniz***\n")
     
     current_portfolio_amount = {}
-    current_portfolio_amount["USD Based Interest"] = get_number("USD Mevduat / Yabancı Para Piyasası Fonu tutarı: ")
-    current_portfolio_amount["TRY Based Interest"] = get_number("TL Mevduat / Para Piyasası Fonu tutarı: ")
-    current_portfolio_amount["Gold"] = get_number("Altın tutarı: ")
-    current_portfolio_amount["Silver"] = get_number("Gümüş tutarı: ")
-    current_portfolio_amount["Foreign Stocks"] = get_number("Yabancı Hisseler tutarı: ")
-    current_portfolio_amount["Turkish Fund"] = get_number("Türk Fon Sepeti tutarı: ")
-    current_portfolio_amount["Turkish Stocks"] = get_number("Türk Hisseleri tutarı: ")
-    current_portfolio_amount["BTC"] = get_number("BTC tutarı: ")
-    current_portfolio_amount["Cryptocurrency"] = get_number("Diğer Kripto Varlıklar (Altcoin) tutarı: ")
+    
+    # Her varlık için is_usd_based kontrolü yap
+    assets_prompts = {
+        "USD Based Interest": "USD Mevduat / Yabancı Para Piyasası Fonu",
+        "TRY Based Interest": "TL Mevduat / Para Piyasası Fonu",
+        "Gold": "Altın",
+        "Silver": "Gümüş",
+        "Foreign Stocks": "Yabancı Hisseler",
+        "Turkish Fund": "Türk Fon Sepeti",
+        "Turkish Stocks": "Türk Hisseleri",
+        "BTC": "BTC",
+        "Cryptocurrency": "Diğer Kripto Varlıklar (Altcoin)"
+    }
+    
+    for asset_key, asset_name in assets_prompts.items():
+        is_usd_based = asset_info.get(asset_key, {}).get('is_usd_based', False)
+        if is_usd_based:
+            prompt = f"{asset_name} tutarı (USD): "
+            value_usd = get_number(prompt)
+            value = value_usd * usd_rate  # USD'yi TL'ye çevir
+            if value_usd > 0:
+                print(f"  → ${value_usd:,.2f} USD = {value:,.2f} TL")
+        else:
+            prompt = f"{asset_name} tutarı (TL): "
+            value = get_number(prompt)
+        
+        current_portfolio_amount[asset_key] = value
     
     return current_portfolio_amount
 
@@ -164,7 +197,7 @@ if __name__ == "__main__":
 
     selected_person = select_person(people_list)
     if selected_person:
-        overall_amount_dist = get_current_portfolio_info()
+        overall_amount_dist = get_current_portfolio_info(asset_info)
         overall_principal = sum(overall_amount_dist.values())
         
         if overall_principal == 0:

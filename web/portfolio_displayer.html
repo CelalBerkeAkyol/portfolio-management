@@ -449,6 +449,10 @@
         );
         const data = labels.map((key) => chartDataObj[key]);
         const backgroundColors = labels.map((label) => getColorForAsset(label));
+
+        // US Sector chart için USD göster, diğerleri için TL
+        const isUsSectorChart = canvasId === "usSectorChart";
+
         const chart = new Chart(chartCanvas.getContext("2d"), {
           type: "doughnut",
           data: {
@@ -483,10 +487,22 @@
                     );
                     const percentage =
                       total > 0 ? (currentValue / total) * 100 : 0;
-                    const formattedValue = currentValue.toLocaleString(
-                      "tr-TR",
-                      { style: "currency", currency: "TRY" }
-                    );
+
+                    let formattedValue;
+                    if (isUsSectorChart) {
+                      // USD göster
+                      formattedValue = `$${currentValue.toLocaleString(
+                        "en-US",
+                        { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+                      )}`;
+                    } else {
+                      // TL göster
+                      formattedValue = currentValue.toLocaleString("tr-TR", {
+                        style: "currency",
+                        currency: "TRY",
+                      });
+                    }
+
                     return `${label}: ${formattedValue} (${percentage.toFixed(
                       0
                     )}%)`;
@@ -529,20 +545,33 @@
         if (canvasId === "usSectorChart") usSectorChart = chart;
       }
 
+      let currencyData = {};
+
       document.addEventListener("DOMContentLoaded", async function () {
         try {
-          const [peopleResponse, assetResponse, sectorResponse] =
-            await Promise.all([
-              fetch("../data/people.json"),
-              fetch("../data/asset_info.json"),
-              fetch("../data/us_sector_config.json"),
-            ]);
-          if (!peopleResponse.ok || !assetResponse.ok || !sectorResponse.ok) {
+          const [
+            peopleResponse,
+            assetResponse,
+            sectorResponse,
+            currencyResponse,
+          ] = await Promise.all([
+            fetch("../data/people.json"),
+            fetch("../data/asset_info.json"),
+            fetch("../data/us_sector_config.json"),
+            fetch("../data/currency.json"),
+          ]);
+          if (
+            !peopleResponse.ok ||
+            !assetResponse.ok ||
+            !sectorResponse.ok ||
+            !currencyResponse.ok
+          ) {
             throw new Error("JSON dosyaları yüklenirken bir ağ hatası oluştu.");
           }
           peopleData = await peopleResponse.json();
           assetInfo = await assetResponse.json();
           sectorConfig = await sectorResponse.json();
+          currencyData = await currencyResponse.json();
           initializeApp();
         } catch (error) {
           console.error("Veri yükleme hatası:", error);
@@ -600,23 +629,34 @@
           targetAmountDist[asset] = overallPrincipal * percent;
         }
 
-        // ABD sektör dağılımı (Foreign Stocks hedef oranı kullanılarak)
+        // ABD sektör dağılımı (Foreign Stocks hedef oranı kullanılarak) - USD bazlı
         const foreignStocksPercent = targetPortfolioDef["Foreign Stocks"] || 0;
+        const usdRate = currencyData.USD_TRY || 34.0;
         const usTotalAmount = overallPrincipal * foreignStocksPercent;
+        const usTotalUSD = usTotalAmount / usdRate;
         const sectorNote = document.getElementById("us-sector-note");
         if (usTotalAmount > 0 && sectorConfig?.sectors) {
           const sectorData = {};
           Object.entries(sectorConfig.sectors).forEach(([name, info]) => {
-            sectorData[name] = usTotalAmount * (info.percentage || 0);
+            // USD bazlı değerleri göster
+            sectorData[name] =
+              (usTotalAmount * (info.percentage || 0)) / usdRate;
           });
-          drawPieChart("usSectorChart", "ABD Sektör Dağılımı", sectorData);
+          drawPieChart(
+            "usSectorChart",
+            "ABD Sektör Dağılımı (USD)",
+            sectorData
+          );
           sectorNote.style.display = "block";
           sectorNote.textContent = `Foreign Stocks hedef oranı (%${(
             foreignStocksPercent * 100
-          ).toFixed(0)}) x Toplam Portföy = ${usTotalAmount.toLocaleString(
-            "tr-TR",
-            { style: "currency", currency: "TRY" }
-          )}`;
+          ).toFixed(0)}) x Toplam Portföy = $${usTotalUSD.toLocaleString(
+            "en-US",
+            { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+          )} USD (${usTotalAmount.toLocaleString("tr-TR", {
+            style: "currency",
+            currency: "TRY",
+          })} - Kur: ${usdRate.toFixed(2)})`;
         } else {
           const canvas = document.getElementById("usSectorChart");
           if (canvas) {

@@ -14,6 +14,7 @@ from us_sector_calculator import (
 # File paths
 ASSET_FILE = "../data/asset_info.json"
 PEOPLE_FILE = "../data/people.json"
+CURRENCY_FILE = "../data/currency.json"
 
 
 def load_file(file_path):
@@ -30,6 +31,15 @@ def load_file(file_path):
     except json.JSONDecodeError:
         print(f"Error: '{file_path}' is not a valid JSON file.")
         return None
+
+def get_usd_rate():
+    """
+    currency.json dosyasından USD/TRY kurunu okur.
+    """
+    currency_data = load_file(CURRENCY_FILE)
+    if isinstance(currency_data, dict) and 'USD_TRY' in currency_data:
+        return currency_data['USD_TRY']
+    return 34.0  # Varsayılan kur
 
 def validate_portfolio_percentages(portfolio_dict):
     """
