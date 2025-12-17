@@ -2,117 +2,92 @@
   "USD TRY Based": {
     "risk_score": 1,
     "expected_return_description": "Below inflation",
-    "expected_percentage_return": 0.2,
-    "bad_scenario_return": 0.16,
-    "good_scenario_return": 0.01,
+    "expected_percentage_return": 0.04,
+    "bad_scenario_return": 0.1,
+    "good_scenario_return": 0.02,
     "is_usd_based": false,
     "description": "Turkish Lira based US Dollar"
   },
   "TRY Based Interest": {
-    "risk_score": 2,
+    "risk_score": 2.5,
     "expected_return_description": "Around inflation",
-    "expected_percentage_return": 0.14,
-    "bad_scenario_return": 0.17,
-    "good_scenario_return": 0.115,
+    "expected_percentage_return": 0.07,
+    "bad_scenario_return": 0.08,
+    "good_scenario_return": 0.05,
     "is_usd_based": false,
     "description": "TRY-based interest income and money market funds"
   },
   "USD Based Interest": {
     "risk_score": 1,
     "expected_return_description": "Above USD inflation",
-    "expected_percentage_return": 0.035,
-    "bad_scenario_return": 0.055,
-    "good_scenario_return": 0.025,
+    "expected_percentage_return": 0.01,
+    "bad_scenario_return": 0.02,
+    "good_scenario_return": 0.01,
     "is_usd_based": true,
     "description": "USD-based interest income and foreign money market funds"
   },
   "Gold": {
     "risk_score": 4,
     "expected_return_description": "Medium",
-    "expected_percentage_return": 0.13,
-    "bad_scenario_return": 0.25,
-    "good_scenario_return": -0.1,
+    "expected_percentage_return": 0.1,
+    "bad_scenario_return": -0.05,
+    "good_scenario_return": 0.15,
     "is_usd_based": true,
     "description": "Gold is generally an asset for value preservation."
   },
   "Silver": {
-    "risk_score": 6,
+    "risk_score": 5,
     "expected_return_description": "Medium",
-    "expected_percentage_return": 0.15,
-    "bad_scenario_return": 0.5,
-    "good_scenario_return": -0.2,
+    "expected_percentage_return": 0.02,
+    "bad_scenario_return": -0.1,
+    "good_scenario_return": 0.1,
     "is_usd_based": true,
     "description": "Silver can be more volatile than gold."
   },
-  "Real Estate": {
-    "risk_score": 6,
-    "expected_return_description": "Medium",
-    "expected_percentage_return": 0.2,
-    "bad_scenario_return": -0.15,
-    "good_scenario_return": 0.4,
-    "is_usd_based": false,
-    "description": "Immovable properties like housing and land."
+
+  "Foreign Stocks": {
+    "risk_score": 8,
+    "expected_return_description": "High",
+    "expected_percentage_return": 0.35,
+    "bad_scenario_return": -0.3,
+    "good_scenario_return": 0.6,
+    "is_usd_based": true,
+    "description": "Stocks traded on foreign exchanges."
   },
   "Turkish Fund": {
-    "risk_score": 9,
+    "risk_score": 7,
     "expected_return_description": "High",
-    "expected_percentage_return": 0.25,
-    "bad_scenario_return": -0.2,
+    "expected_percentage_return": 0.2,
+    "bad_scenario_return": -0.15,
     "good_scenario_return": 0.35,
     "is_usd_based": false,
     "description": "Fund traded on TEFAS."
   },
-  "Turkish Spec Stocks": {
-    "risk_score": 9,
-    "expected_return_description": "Very High",
-    "expected_percentage_return": 0.5,
-    "bad_scenario_return": -0.4,
-    "good_scenario_return": 0.75,
-    "is_usd_based": false,
-    "description": "Stocks traded on Borsa Istanbul."
-  },
-  "Turkish Grow Stocks": {
-    "risk_score": 7,
-    "expected_return_description": "High",
-    "expected_percentage_return": 0.28,
-    "bad_scenario_return": -0.2,
-    "good_scenario_return": 0.4,
-    "is_usd_based": false,
-    "description": "Stocks traded on Borsa Istanbul."
-  },
-  "Turkish Value Stocks": {
-    "risk_score": 6,
-    "expected_return_description": "High",
-    "expected_percentage_return": 0.25,
-    "bad_scenario_return": -0.15,
-    "good_scenario_return": 0.4,
-    "is_usd_based": false,
-    "description": "Stocks traded on Borsa Istanbul."
-  },
-  "Foreign Stocks": {
-    "risk_score": 7,
+  "Turkish Stocks": {
+    "risk_score": 8,
     "expected_return_description": "High",
     "expected_percentage_return": 0.1,
-    "bad_scenario_return": -0.2,
-    "good_scenario_return": 0.25,
-    "is_usd_based": true,
-    "description": "Stocks traded on foreign exchanges."
+    "bad_scenario_return": -0.4,
+    "good_scenario_return": 0.5,
+    "is_usd_based": false,
+    "description": "Stocks traded on Borsa Istanbul."
   },
+
   "BTC": {
-    "risk_score": 8,
+    "risk_score": 7,
     "expected_return_description": "Very High",
-    "expected_percentage_return": 0.2,
-    "bad_scenario_return": -0.25,
-    "good_scenario_return": 0.35,
+    "expected_percentage_return": 0.25,
+    "bad_scenario_return": -0.2,
+    "good_scenario_return": 0.45,
     "is_usd_based": true,
     "description": "Digital like Bitcoin."
   },
   "Cryptocurrency": {
-    "risk_score": 10,
+    "risk_score": 9,
     "expected_return_description": "Very High",
-    "expected_percentage_return": 0.4,
-    "bad_scenario_return": -0.6,
-    "good_scenario_return": 0.75,
+    "expected_percentage_return": 0.5,
+    "bad_scenario_return": -0.25,
+    "good_scenario_return": 0.8,
     "is_usd_based": true,
     "description": "Digital assets like Bitcoin and Ethereum."
   }

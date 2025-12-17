@@ -1,6 +1,12 @@
 
 import json
 import sys
+from us_sector_calculator import (
+    load_sector_config, 
+    validate_sector_percentages,
+    calculate_us_sector_allocation,
+    display_us_sector_allocation
+)
 
 # For target portfolio calculations, ratios are taken directly from people.json for each person.
 # It is easier to edit the ratios in the JSON file than to enter them one by one here.
@@ -114,6 +120,14 @@ def show_distribution_and_report(name, principal, target_portfolio, asset_info):
     print(f"Weighted Average Portfolio Risk: {total_portfolio_risk:.2f} / 10")
     print(f"Annual (TL Based) Portfolio Return Expectation: %{total_portfolio_return * 100:.2f}")
     print("="*50)
+    
+    # Amerika sektörel dağılımını göster (Foreign Stocks oranına göre)
+    foreign_stocks_allocation = target_portfolio.get("Foreign Stocks", 0)
+    if foreign_stocks_allocation > 0:
+        sector_config = load_sector_config()
+        if sector_config and validate_sector_percentages(sector_config):
+            sector_allocation = calculate_us_sector_allocation(principal, foreign_stocks_allocation, sector_config)
+            display_us_sector_allocation(name, principal, foreign_stocks_allocation, sector_allocation)
 
 # --- Main Program ---
 if __name__ == "__main__":

@@ -1,5 +1,11 @@
 import json
 import sys
+from us_sector_calculator import (
+    load_sector_config, 
+    validate_sector_percentages,
+    calculate_us_sector_allocation,
+    get_sector_summary_table
+)
 
 PEOPLE_FILE = "../data/people.json"
 ASSET_FILE = "../data/asset_info.json"
@@ -139,6 +145,29 @@ def show_comparison_report(name, principal, current_dist, target_dist, asset_inf
     show_scenario_analysis(principal, current_dist, target_dist, asset_info)
     print("=" * table_width)
 
+def show_us_sector_analysis(name, principal, target_dist):
+    """
+    Amerika sektörel dağılımını Foreign Stocks hedef oranı üzerinden gösterir.
+    """
+    foreign_stocks_allocation = target_dist.get("Foreign Stocks", 0) if target_dist else 0
+    if foreign_stocks_allocation <= 0:
+        return
+    
+    sector_config = load_sector_config()
+    if not sector_config or not validate_sector_percentages(sector_config):
+        print("\nAmerika sektör konfigürasyonu yüklenemedi veya geçersiz.")
+        return
+    
+    sector_allocation = calculate_us_sector_allocation(principal, foreign_stocks_allocation, sector_config)
+    
+    print("\n" + "="*70)
+    print(f"AMERİKA SEKTÖREL DAĞILIM ANALİZİ - {name}")
+    print("="*70)
+    print(f"Toplam Portföy: {principal:,.2f} TL")
+    print(f"Amerika'ya Ayrılan: {principal * foreign_stocks_allocation:,.2f} TL (%{foreign_stocks_allocation*100:.0f})")
+    print(get_sector_summary_table(sector_allocation))
+    print("="*70)
+
 if __name__ == "__main__":
     people_list = load_file(PEOPLE_FILE)
     asset_info = load_file(ASSET_FILE)
@@ -168,6 +197,8 @@ if __name__ == "__main__":
                 target_dist,
                 asset_info
             )
+            # Amerika sektör analizini göster
+            show_us_sector_analysis(name, principal, target_dist)
         else:
             print("\nMevcut ve/veya hedef portföy bilgileri eksik.")
             print("Karşılaştırma raporu oluşturulamadı.")

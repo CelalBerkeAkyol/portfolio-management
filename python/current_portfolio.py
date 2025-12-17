@@ -77,14 +77,11 @@ def get_current_portfolio_info():
     current_portfolio_amount["TRY Based Interest"] = get_number("TL Mevduat / Para Piyasası Fonu tutarı: ")
     current_portfolio_amount["Gold"] = get_number("Altın tutarı: ")
     current_portfolio_amount["Silver"] = get_number("Gümüş tutarı: ")
-    current_portfolio_amount["Real Estate"] = get_number("Gayrimenkul / GYO Fonu tutarı: ")
     current_portfolio_amount["Foreign Stocks"] = get_number("Yabancı Hisseler tutarı: ")
     current_portfolio_amount["Turkish Fund"] = get_number("Türk Fon Sepeti tutarı: ")
-    current_portfolio_amount["Turkish Value Stocks"] = get_number("Türk Değer Hisseleri tutarı: ")  
-    current_portfolio_amount["Turkish Grow Stocks"] = get_number("Türk Büyüme Hisseleri tutarı: ")
+    current_portfolio_amount["Turkish Stocks"] = get_number("Türk Hisseleri tutarı: ")
     current_portfolio_amount["BTC"] = get_number("BTC tutarı: ")
     current_portfolio_amount["Cryptocurrency"] = get_number("Diğer Kripto Varlıklar (Altcoin) tutarı: ")
-    current_portfolio_amount["Trade"] = get_number("Trade için ayrılan serbest tutar: ")
     
     return current_portfolio_amount
 
