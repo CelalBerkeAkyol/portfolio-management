@@ -1,0 +1,33 @@
+{
+  "sectors": {
+    "AI": {
+      "percentage": 0.3,
+      "description": "Yapay zeka, makine öğrenmesi ve veri analitiği odaklı teknoloji çözümleri."
+    },
+    "Aerospace and Defence": {
+      "percentage": 0.15,
+      "description": "Havacılık sistemleri, uydu teknolojileri ve savunma sanayii çözümleri."
+    },
+    "Robotic and autonomous": {
+      "percentage": 0.15,
+      "description": "Otonom sistemler, robotik teknolojiler ve endüstriyel otomasyon."
+    },
+    "Nuclear Energy": {
+      "percentage": 0.1,
+      "description": "Nükleer güç santralleri, uranyum madenciliği ve sürdürülebilir enerji üretimi."
+    },
+    "Solar Energy or Clean Energy": {
+      "percentage": 0.1,
+      "description": "Güneş paneli teknolojileri ve fotovoltaik enerji sistemleri."
+    },
+    "Crypto Currency": {
+      "percentage": 0.1,
+      "description": "Blokzincir teknolojisi, dijital varlıklar ve merkeziyetsiz finans sistemleri."
+    },
+    "Biotechnology": {
+      "percentage": 0.1,
+      "description": "Genetik mühendisliği, biyofarmasötik ürünler ve sağlık teknolojileri."
+    }
+  },
+  "info": "Sektörel dağılım toplamı tam olarak 1.0 (100%) olarak güncellenmiştir."
+}
